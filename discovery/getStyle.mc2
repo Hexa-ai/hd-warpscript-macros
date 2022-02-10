@@ -22,6 +22,7 @@ This macro returns the base style for Hexa-Data dashboards.
           '.discovery-dashboard-tile' 'border-radius: 0.5rem; background-color: white; box-shadow: 10px 5px 5px black;'
           '.discovery-tile' 'border-radius: 0.5rem; overflow:hidden;'
           '.discovery-tile h2' 'font-size: 0.875rem; line-height: 1.25rem; --warp-view-font-color: #7F7280)'
+          '.svg-container' 'text-align:center;' 
         }
     'datasetColor' '#1e40af'
   }
