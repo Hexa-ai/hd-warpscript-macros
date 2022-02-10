@@ -5,7 +5,7 @@
     This macro returns the description of a tag in the language of the user.
     If there is no match, the description 1 will be returned
   '>
-  'sig' [ [ [ 'varableTagName:STRING'] [ 'description:STRING' ] ] ] // Signature
+  'sig' [ [ [ 'varableTagName:STRING' ] [ 'description:STRING' ] ] ] // Signature
   'params' {
     // Signature params description
     'varableTagName' 'parameter varableTagName TOP of the stack'
