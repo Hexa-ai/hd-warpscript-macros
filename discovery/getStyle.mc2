@@ -17,12 +17,11 @@ This macro returns the base style for Hexa-Data dashboards.
   {
     'cssStyle'
       {
-          '.discovery-dashboard-main h1' 'font-size: 1.125rem; line-height: 1.75rem; color: rgb(17 24 39 / 1))'
-          '.discovery-dashboard-main p' 'font-size: 0.875rem; line-height: 1.25rem; color: rgb(17 24 39 / 1))'
-          '.discovery-dashboard-tile' 'border-radius: 0.5rem; background-color: white; box-shadow: 10px 5px 5px black;'
-          '.discovery-tile' 'border-radius: 0.5rem; overflow:hidden;'
-          '.discovery-tile h2' 'font-size: 0.875rem; line-height: 1.25rem; --warp-view-font-color: #7F7280)'
-          '.svg-container' 'text-align:center;' 
+          '.discovery-dashboard-main h1' 'font-size: 1.125rem; line-height: 1.75rem; color: rgb(17 24 39 / 1);'
+          '.discovery-dashboard-main p' 'font-size: 0.875rem; line-height: 1.25rem; color: rgb(17 24 39 / 1);'
+          '.discovery-dashboard-tile' 'border-radius: 0.5rem; background-color: white; box-shadow: 10px 5px 5px black; --warp-view-datagrid-even-bg-color:#E5E7EB; --warp-view-datagrid-even-color:#1F2937; --warp-view-pagination-active-bg-color:#1F2937;'
+          '.discovery-tile' 'border-radius: 0.5rem; overflow:hidden; --warp-view-datagrid-even-bg-color:#E5E7EB; --warp-view-datagrid-even-color:#1F2937; --warp-view-pagination-active-bg-color:#1F2937;'
+          '.discovery-tile h2' 'font-size: 0.875rem; line-height: 1.25rem; --warp-view-font-color: #7F7280;' 
         }
     'datasetColor' '#1e40af'
   }
