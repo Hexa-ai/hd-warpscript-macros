@@ -1,0 +1,61 @@
+
+{
+  'name' 'select'
+  'desc' 
+  <'
+  This macro retrieves data from several GTS on a given range.
+  The purpose of this macro is to be used with the other queryBuilder functions (where, andWhere, orWhere, whereAnd and whereOr).
+  The objective of this queryBuilder is to simply perform processing on structures such as could be found in an SQL database
+  (a table with several columns). In our case each selected GTS represents a column of the table.
+  To be functional each record must have the same timestamp in each GTS.
+  '>
+  'sig' [ [ [ 'rangeDtStart:LONG' ] [ 'rangeDtEnd:LONG' ] [ 'class:STRING' ] [ 'readToken:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'rangeDtStart' 'Oldest timestamp to consider when fetching datapoints. In platform time unit or ISO-8601.'
+    'rangeDtEnd' 'Newest timestamp to consider when fetching datapoints. In platform time unit or ISO-8601.k'
+    'class' 'WarpScript GTS class name, as used in fetch function'
+    'readToken' 'WarpScript read token'
+  }
+  'examples' [
+    <'
+      $rangeDtStart $rangeDtEnd '~mA.Code|mA.Temp' $readToken @select
+    '>
+  ]
+} 'info' STORE
+<%
+    // Parameters
+    'readToken' STORE
+    'class' STORE
+    'rangeDtEnd' STORE
+    'rangeDtStart' STORE
+    
+    // Fetch selected GTS
+    { 
+      'token' $readToken 
+      'class' $class 
+      'labels' {} 
+      'end' $rangeDtEnd
+      'start' $rangeDtStart
+    } FETCH
+    
+    // Sort GTS by name
+    <%
+    NAME
+    %>
+    SORTBY 'gts' STORE
+    
+    // Create GTS name list
+    [] 'varGtsList' STORE
+    $gts
+    <%
+    'item' STORE
+    $varGtsList [ $item NAME ] APPEND 'varGtsList' STORE
+    %>
+    FOREACH
+    
+    // Return
+    '' // Empty query
+    $varGtsList // GTS name list
+    $gts // Fetched GTS
+  %>
