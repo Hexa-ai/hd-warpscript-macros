@@ -30,7 +30,7 @@
   'request' STORE
   
   // Return
-  $request '$values ' $varGtsList $col @findIndex  ' GET ' $value TOSTRING ' == AND ' ' ' 6 JOIN
+  $request '$values ' $varGtsList $col @utils/findIndex  ' GET ' $value TOSTRING ' == AND ' ' ' 6 JOIN
   $gtsList
   $gts
 %>
