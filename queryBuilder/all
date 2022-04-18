@@ -62,11 +62,11 @@
 
           <% $outputGts $gtsName CONTAINSKEY SWAP DROP %>
           <%
-            $outputGts $gtsName GET $ts NaN NaN NaN $values $gtsList $gtsName @findIndex GET ADDVALUE 'gts' STORE
+            $outputGts $gtsName GET $ts NaN NaN NaN $values $gtsList $gtsName @utils/findIndex GET ADDVALUE 'gts' STORE
             $outputGts { $gtsName $gts } APPEND 'outputGts' STORE
           %>
           <%
-            NEWGTS $gtsName RENAME $ts NaN NaN NaN $values $gtsList $gtsName @findIndex GET ADDVALUE 'gts' STORE
+            NEWGTS $gtsName RENAME $ts NaN NaN NaN $values $gtsList $gtsName @utils/findIndex GET ADDVALUE 'gts' STORE
             $outputGts { $gtsName $gts } APPEND 'outputGts' STORE
           %>
           IFTE
