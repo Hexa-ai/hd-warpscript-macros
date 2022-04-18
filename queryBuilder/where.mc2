@@ -16,7 +16,7 @@
   }
   'examples' [
     <'
-      'mA.Code' 12 '==' @where
+      'mA.Code' 12 '==' @queryBuilder/where
     '>
   ]
 } 'info' STORE
