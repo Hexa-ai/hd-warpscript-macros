@@ -1,0 +1,32 @@
+{
+  'name' 'or'
+  'desc' 
+  <'
+  This macro applies an OR filter (as in SQL) on the result of the quryBuilder's select function.
+  '>
+  'sig' [ [ [ 'request:STRING' ] [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'request' 'request from select or other function of queryBuilder'
+    'gtsList' 'List of GTS name from select or other function of queryBuilder'
+    'gts' 'gts list from select or other function of queryBuilder'
+  }
+  'examples' [
+    <'
+      'mA.Code' 12 '>=' @Where
+      'mA.Code' 8 '==' @orWhere
+      'mA.temp' 2 '==' @Where
+      @or
+    '>
+  ]
+} 'info' STORE
+<%
+  // Description
+  'gts'     STORE
+  'gtsList' STORE
+  'request' STORE
+  // Return
+  $request ' OR ' ' ' 2 JOIN
+  $gtsList
+  $gts
+%>
