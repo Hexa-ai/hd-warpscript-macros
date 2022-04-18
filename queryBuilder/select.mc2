@@ -19,7 +19,7 @@
   }
   'examples' [
     <'
-      $rangeDtStart $rangeDtEnd '~mA.Code|mA.Temp' $readToken @select
+      $rangeDtStart $rangeDtEnd '~mA.Code|mA.Temp' $readToken @queryBuilder/select
     '>
   ]
 } 'info' STORE
