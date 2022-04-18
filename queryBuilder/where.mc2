@@ -1,0 +1,36 @@
+{
+  'name' 'where'
+  'desc' 
+  <'
+  This macro applies a where type filter (as in SQL) on the result of the quryBuilder's select function.
+  '>
+  'sig' [ [ [ 'request:STRING' ] [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] [ 'col:STRING' ] [ 'value:any' ] [ 'comp:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'request' 'request from select or other function of queryBuilder'
+    'gtsList' 'List of GTS name from select or other function of queryBuilder'
+    'gts' 'gts list from select or other function of queryBuilder'
+    'col' 'column on which to apply the filter (GTS classname)'
+    'value' 'filter value'
+    'comp' 'filter type ==, <, <=, >, >='
+  }
+  'examples' [
+    <'
+      'mA.Code' 12 '==' @where
+    '>
+  ]
+} 'info' STORE
+<%
+  // Parameters
+  'comp'    STORE
+  'value'   STORE
+  'col'     STORE
+  'gts'     STORE
+  'gtsList' STORE
+  'request' STORE
+  
+  // Return
+  $request '$values ' $varGtsList $col @findIndex  ' GET ' $value TOSTRING ' ==' ' ' 6 JOIN
+  $gtsList
+  $gts
+%>
