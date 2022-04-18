@@ -1,0 +1,32 @@
+{
+  'name' 'findIndex'
+  'desc' 
+  <'
+  This macro find the indexe of an item in a list.
+  '>
+  'sig' [ [ [ 'list:LIST<any>' ] [ 'searchedValue:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'searchedValue' 'The item to look for'
+    'list' 'The collection in wich to look for the object'
+  }
+  'examples' [
+    <'
+      ['aa' 'bb' ] 'aa' @utils/findIndex
+    '>
+  ]
+} 'info' STORE
+<%
+  'searchedValue' STORE
+  'list' STORE
+  0 'i' STORE
+  $list
+  <%
+    'element' STORE
+   <% $element $searchedValue == %>
+   <% $i %>
+   <% $i 1 + 'i' STORE %>
+   IFTE
+  %> FOREACH
+
+%> 'findIndex' STORE
