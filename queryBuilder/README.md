@@ -16,6 +16,7 @@ $rangeDtStart $rangeDtEnd '~mA.Code|mA.Evenement|mA.ModeDeMarche' $readToken @qu
 'mA.ModeDeMarche' 6 '==' @queryBuilder/andWhere 
 'mA.Code' '%27055F%27' '==' @queryBuilder/andWhere
 @queryBuilder/all
+```
 
 ## Functions currently available
 
@@ -28,4 +29,4 @@ $rangeDtStart $rangeDtEnd '~mA.Code|mA.Evenement|mA.ModeDeMarche' $readToken @qu
 * @queryBuilder/all
 
 
-```
+
