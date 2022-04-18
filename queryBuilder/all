@@ -1,0 +1,87 @@
+{
+  'name' 'all'
+  'desc' 
+  <'
+  This macro applies the filters (where, orWhere, andWhere and, or) on the result of the quryBuilder's select function.
+  '>
+  'sig' [ [ [ 'request:STRING' ] [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'request' 'request from select or other function of queryBuilder'
+    'gtsList' 'List of GTS name from select or other function of queryBuilder'
+    'gts' 'gts list from select or other function of queryBuilder'
+  }
+  'examples' [
+    <'
+      $rangeDtStart $rangeDtEnd '~mA.Code|mA.Evenement|mA.ModeDeMarche' $readToken @queryBuilder/select
+      'mA.Code' 12 '>=' @queryBuilder/Where
+      'mA.Code' 8 '==' @queryBuilder/orWhere
+      'mA.temp' 2 '==' @queryBuilder/Where
+      @queryBuilder/or
+      @queryBuilder/all
+    '>
+  ]
+} 'info' STORE
+<%
+  // Parameters
+  'gts'     STORE
+  'gtsList' STORE
+  'request' STORE
+
+  <% $request '' == %>
+  <% ' true ' 'request' STORE %>
+  IFT
+
+  <%
+
+    'values' STORE
+    $values 0 GET 'ts' STORE
+    $values 7 GET 'values' STORE
+
+    false 'escape' STORE
+
+    $values
+    <% 
+      <% NULL == %>
+      <% true 'escape' STORE %>
+      <% false 'escape' STORE %>
+      IFTE
+    %>
+    FOREACH
+
+    <% $escape false == %>
+    <%
+      <% $request '' == %>
+      <% ' true ' 'request' STORE %>
+      IFT
+      <% $request EVAL %>
+      <%
+        $gtsList
+        <% 
+          'gtsName' STORE
+
+          <% $outputGts $gtsName CONTAINSKEY SWAP DROP %>
+          <%
+            $outputGts $gtsName GET $ts NaN NaN NaN $values $gtsList $gtsName @findIndex GET ADDVALUE 'gts' STORE
+            $outputGts { $gtsName $gts } APPEND 'outputGts' STORE
+          %>
+          <%
+            NEWGTS $gtsName RENAME $ts NaN NaN NaN $values $gtsList $gtsName @findIndex GET ADDVALUE 'gts' STORE
+            $outputGts { $gtsName $gts } APPEND 'outputGts' STORE
+          %>
+          IFTE
+        %>
+        FOREACH
+      %>
+      IFT
+    %>
+    IFT
+    [ NOW NaN NaN NaN 0 ]
+  %> 'fuReducer' STORE
+
+  {} 'outputGts' STORE
+
+  [ $gts [] $fuReducer MACROREDUCER ] REDUCE 'result' STORE
+  // Return
+  $outputGts VALUELIST
+%>
