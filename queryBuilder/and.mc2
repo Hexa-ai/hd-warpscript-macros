@@ -2,7 +2,7 @@
   'name' 'and'
   'desc' 
   <'
-  This macro applies an and type filter (as in SQL) on the result of the quryBuilder's select function.
+  This macro applies an AND type filter (as in SQL) on the result of the quryBuilder's select function.
   '>
   'sig' [ [ [ 'request:STRING' ] [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] ] ] // Signature
   'params' {
@@ -13,10 +13,10 @@
   }
   'examples' [
     <'
-      'mA.Code' 12 '>=' @Where
-      'mA.Code' 8 '==' @orWhere
-      'mA.temp' 2 '==' @Where
-      @and
+      'mA.Code' 12 '>=' @queryBuilder/Where
+      'mA.Code' 8 '==' @queryBuilder/orWhere
+      'mA.temp' 2 '==' @queryBuilder/Where
+      @queryBuilder/and
     '>
   ]
 } 'info' STORE
