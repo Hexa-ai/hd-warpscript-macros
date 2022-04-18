@@ -16,7 +16,7 @@
   }
   'examples' [
     <'
-      'mA.Code' 12 '>=' @orWhere
+      'mA.Code' 12 '>=' @queryBuilder/orWhere
     '>
   ]
 } 'info' STORE
