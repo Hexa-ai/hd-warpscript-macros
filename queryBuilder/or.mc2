@@ -13,10 +13,10 @@
   }
   'examples' [
     <'
-      'mA.Code' 12 '>=' @Where
-      'mA.Code' 8 '==' @orWhere
-      'mA.temp' 2 '==' @Where
-      @or
+      'mA.Code' 12 '>=' @queryBuilder/Where
+      'mA.Code' 8 '==' @queryBuilder/orWhere
+      'mA.temp' 2 '==' @queryBuilder/Where
+      @queryBuilder/or
     '>
   ]
 } 'info' STORE
