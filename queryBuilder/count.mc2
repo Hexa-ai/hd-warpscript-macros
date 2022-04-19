@@ -1,0 +1,43 @@
+{
+  'name' 'count'
+  'desc' 
+  <'
+  This macro count values of a selected field.
+  this macro must be used after the macrop @queryBuilder/all of the queryBuilder
+  '>
+  'sig' [ [ [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] [ 'col:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'gtsList' 'List of GTS name from select or other function of queryBuilder'
+    'gts' 'gts list from select or other function of queryBuilder'
+    'col' 'column to count values on'
+  }
+  'examples' [
+    <'
+      $rangeDtStart $rangeDtEnd '~mA.Code|mA.Evenement|mA.ModeDeMarche' $readToken @queryBuilder/select
+      'mA.Code' 12 '>=' @queryBuilder/Where
+      'mA.Code' 8 '==' @queryBuilder/orWhere
+      'mA.temp' 2 '==' @queryBuilder/Where
+      @queryBuilder/or
+      @queryBuilder/all
+      'mA.temp' @queryBuilder/count
+    '>
+  ]
+} 'info' STORE
+<%
+  // Parameters
+  'col'     STORE
+  'gts'     STORE
+  'gtsList' STORE
+
+  0 'sum' STORE
+
+  $gts $gtsList $col @utils/findIndex GET VALUES
+  <% 
+      $sum + 'sum' STORE
+  %>
+  FOREACH
+ 
+  // Return
+  $sum
+%>
