@@ -84,4 +84,5 @@
   [ $gts [] $fuReducer MACROREDUCER ] REDUCE 'result' STORE
   // Return
   $outputGts VALUELIST
+  $gtsList
 %>
