@@ -27,6 +27,7 @@ $rangeDtStart $rangeDtEnd '~mA.Code|mA.Evenement|mA.ModeDeMarche' $readToken @qu
 * @queryBuilder/and
 * @queryBuilder/or
 * @queryBuilder/all
+* @queryBuilder/count
 
 
 
