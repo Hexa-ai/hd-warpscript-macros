@@ -30,7 +30,11 @@
   'request' STORE
   
   // Return
-  $request '$values ' $varGtsList $col @utils/findIndex  ' GET ' $value TOSTRING ' == OR ' ' ' 6 JOIN
+  <% $value TYPEOF 'STRING' == %>
+  <% $request ' $values ' $varGtsList $col @utils/findIndex  ' GET %27' $value TOSTRING '%27 ' $comp ' OR ' '' 8 JOIN %>
+  <% $request ' $values ' $varGtsList $col @utils/findIndex  ' GET ' $value TOSTRING ' ' $comp ' OR ' '' 8 JOIN %>
+  IFTE
+  
   $gtsList
   $gts
 %>
