@@ -5,7 +5,7 @@
   <'
   This macro splits one of the gts into as many GTS as there are values. the values of the new GTS will correspond to those of a gt whose class name must be passed as a parameter. This function is used with the query builder after the all macro.
   '>
-  'sig' [ [ [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] ['colValue:STRING'] ['col2Explode:STRING'] ] ] // Signature
+  'sig' [ [ [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] [ 'colValue:STRING' ] [ 'col2Explode:STRING' ] ] ] // Signature
   'params' {
     // Signature params description
     'gtsList' 'List of GTS name from select or other function of queryBuilder'
