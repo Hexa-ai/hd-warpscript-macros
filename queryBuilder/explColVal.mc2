@@ -1,3 +1,30 @@
+
+{
+  'name' 'explColVal'
+  'desc' 
+  <'
+  This macro splits one of the gts into as many GTS as there are values. the values of the new GTS will correspond to those of a gt whose class name must be passed as a parameter. This function is used with the query builder after the all macro.
+  '>
+  'sig' [ [ [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] ['colValue:STRING'] ['col2Explode:STRING'] ] ] // Signature
+  'params' {
+    // Signature params description
+    'gtsList' 'List of GTS name from select or other function of queryBuilder'
+    'gts' 'gts list from select or other function of queryBuilder'
+    'colValue' 'Classname of the GTS to use as values for new GTS'
+    'col2Explode' 'GTS classname to explode'
+  }
+  'examples' [
+    <'
+      $rangeDtStart $rangeDtEnd '~mA.Code|mA.Evenement|mA.ModeDeMarche' $readToken @queryBuilder/select
+      'mA.Code' 12 '>=' @queryBuilder/Where
+      'mA.Code' 8 '==' @queryBuilder/orWhere
+      'mA.temp' 2 '==' @queryBuilder/Where
+      @queryBuilder/or
+      @queryBuilder/all
+      'mA.Duree' 'mA.Code' @explColVal SWAP DROP
+    '>
+  ]
+} 'info' STORE
 <%
   // Parameters
   'col2Explode' STORE
