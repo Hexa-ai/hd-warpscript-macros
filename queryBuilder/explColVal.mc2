@@ -1,0 +1,72 @@
+<%
+  // Parameters
+  'col2Explode' STORE
+  'colValue' STORE
+  'gts'     STORE
+  'gtsList' STORE
+  
+  <%
+
+  'values' STORE
+  $values 0 GET 'ts' STORE
+  $values 7 GET 'values' STORE
+
+  false 'escape' STORE
+
+  $values
+  <% 
+    <% NULL == %>
+    <% true 'escape' STORE %>
+    <% false 'escape' STORE %>
+    IFTE
+  %>
+  FOREACH
+
+  <% $escape false == %>
+  <%
+    $gtsList
+    <% 
+      'gtsName' STORE
+
+      <% $col2Explode $gtsName == %>
+      <%
+        $values $gtsList  $colValue @utils/findIndex GET $values $gtsList $gtsName @utils/findIndex GET $col2Explode $outputGts @explodeGts 'outputGts' STORE
+      %>
+      IFT
+    %>
+    FOREACH
+  %>
+  IFT
+  [ NOW NaN NaN NaN 0 ]
+  %> 'fuReducer' STORE
+  
+  <% 
+    SAVE 'context' STORE
+    'arGts' STORE
+    'gtsName' STORE
+    'newGtsName' STORE
+    'colValueValue' STORE
+
+    <% $arGts $newGtsName CONTAINSKEY SWAP DROP %>
+    <%
+      $arGts $newGtsName GET $ts NaN NaN NaN $colValueValue ADDVALUE 'gts' STORE
+      $arGts { $newGtsName $gts } APPEND 'arGts' STORE
+    %>
+    <%
+      NEWGTS $newGtsName TOSTRING RENAME $ts NaN NaN NaN $colValueValue ADDVALUE 'gts' STORE
+      $arGts { $newGtsName $gts } APPEND 'arGts' STORE
+    %>
+    IFTE
+
+    $arGts
+
+    $context RESTORE
+  %> 'explodeGts' STORE
+
+  {} 'outputGts' STORE
+
+  [ $gts [] $fuReducer MACROREDUCER ] REDUCE 'result' STORE  
+  // Return
+  $gtsList
+  $outputGts VALUELIST
+%> 'explColVal' STORE
