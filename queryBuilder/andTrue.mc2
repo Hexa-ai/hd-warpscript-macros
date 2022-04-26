@@ -1,5 +1,3 @@
-
-  
 {
   'name' 'andTrue'
   'desc' 
@@ -15,7 +13,7 @@
   }
   'examples' [
     <'
-      'mA.Code' 12 '>=' @queryBuilder/andWhere
+      'mA.Code' 12 '>=' @queryBuilder/andTrue
     '>
   ]
 } 'info' STORE
