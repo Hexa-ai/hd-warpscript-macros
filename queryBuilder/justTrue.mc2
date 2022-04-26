@@ -1,0 +1,31 @@
+{
+  'name' 'andTrue'
+  'desc' 
+  <'
+  This macro applies an where whith always true result.
+  '>
+  'sig' [ [ [ 'request:STRING' ] [ 'gtsList:LIST<STRING>' ] [ 'gts:LIST<gts>' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'request' 'request from select or other function of queryBuilder'
+    'gtsList' 'List of GTS name from select or other function of queryBuilder'
+    'gts' 'gts list from select or other function of queryBuilder'
+  }
+  'examples' [
+    <'
+      'mA.Code' 12 '>=' @queryBuilder/justTrue
+    '>
+  ]
+} 'info' STORE
+<%
+    // Parameters
+    'gts'     STORE
+    'gtsList' STORE
+    'request' STORE
+    
+    // Return
+    $request ' true ' '' 2 JOIN
+
+    $gtsList
+    $gts
+%>
