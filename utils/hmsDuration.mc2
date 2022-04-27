@@ -1,0 +1,18 @@
+{
+  'name' 'hmsDuration'
+  'desc' 
+  <'
+  This macro convert timestamp duration to humaduration without ms and µs.
+  '>
+  'sig' [ [ [ 'timestamp:LONG' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'timestamp' 'The tumestamp to convert'
+  }
+  'examples' [
+    <'
+      NOW @utils/hmsDuration
+    '>
+  ]
+} 'info' STORE
+<% HUMANDURATION '.' SPLIT 0 GET %>
