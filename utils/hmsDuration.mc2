@@ -15,4 +15,4 @@
     '>
   ]
 } 'info' STORE
-<% HUMANDURATION '.' SPLIT 0 GET %>
+<% HUMANDURATION '.' SPLIT 0 GET 's' '' 2 JOIN %>
