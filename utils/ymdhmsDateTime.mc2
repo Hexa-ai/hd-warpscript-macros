@@ -1,0 +1,19 @@
+
+{
+  'name' 'ymdhmsDateTime'
+  'desc' 
+  <'
+  This macro convert timestamp to ISO8601 without ms and µs.
+  '>
+  'sig' [ [ [ 'timestamp:LONG' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'timestamp' 'The tumestamp to convert'
+  }
+  'examples' [
+    <'
+      NOW @utils/ymdhmsDateTime
+    '>
+  ]
+} 'info' STORE
+<% ISO8601 '.' SPLIT 0 GET 's' '' 2 JOIN %>
