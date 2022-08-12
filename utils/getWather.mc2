@@ -29,11 +29,6 @@
   '>
   { 'latitude' $latitude 'longitude' $longitude 'apiKey' $apiKey } TEMPLATE 'url' STORE
 
-  //$url
-
-  //$writeToken 'GET' "https://api.openweathermap.org/data/2.5/weather?lat=48.609539&lon=-2.494735&appid=44a793d430147c4f48e585c85571adca" {} '' WEBCALL
-
-
   { 'url' $url } HTTP 'content' GET 'UTF-8' BYTES-> JSON-> 
 
   $context RESTORE

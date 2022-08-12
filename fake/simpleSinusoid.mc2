@@ -1,0 +1,27 @@
+{
+  'name' 'simpleSinusoid'
+  'desc' 
+  <'
+  This macro return a sionusoidal signal.
+  '>
+  'sig' [ [ [ 'amplitude:LONG' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'amplitude' 'Signal amplitude'
+  }
+  'examples' [
+    <'
+      230 @utils/simpleSinusoid
+    '>
+  ]
+} 'info' STORE
+<%
+  'amplitude' STORE
+
+  SAVE 'context' STORE
+
+  NEWGTS 'cos' RENAME
+  1 1080 <% 'i' STORE $i NaN NaN NaN $i TORADIANS COS $amplitude * ADDVALUE %> FOR
+
+  $context RESTORE
+%>
