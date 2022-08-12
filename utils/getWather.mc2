@@ -1,0 +1,40 @@
+{
+  'name' 'getWather'
+  'desc' 
+  <'
+  This macro get the weather from OpenWeather in metric format.
+  '>
+  'sig' [ [ [ 'latitude:LONG' ] [ 'longitude:LONG' ] [ 'apiKey:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'apiKey' 'API key from OpenWeather'
+    'longitude' 'Geographical coordinates latitude'
+    'latitude' 'Geographical coordinates longitude'
+  }
+  'examples' [
+    <'
+      48.609539 -2.494735 'your api key' @utils/getWather
+    '>
+  ]
+} 'info' STORE
+<%
+  'apiKey' STORE
+  TOSTRING 'longitude' STORE
+  TOSTRING 'latitude' STORE
+
+  SAVE 'context' STORE
+
+  <'
+  https://api.openweathermap.org/data/2.5/weather?lat={{latitude}}&lon={{longitude}}&units=metric&appid={{apiKey}}
+  '>
+  { 'latitude' $latitude 'longitude' $longitude 'apiKey' $apiKey } TEMPLATE 'url' STORE
+
+  //$url
+
+  //$writeToken 'GET' "https://api.openweathermap.org/data/2.5/weather?lat=48.609539&lon=-2.494735&appid=44a793d430147c4f48e585c85571adca" {} '' WEBCALL
+
+
+  { 'url' $url } HTTP 'content' GET 'UTF-8' BYTES-> JSON-> 
+
+  $context RESTORE
+%>
