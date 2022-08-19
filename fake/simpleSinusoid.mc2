@@ -11,7 +11,7 @@
   }
   'examples' [
     <'
-      230 @utils/simpleSinusoid
+      230 @fake/simpleSinusoid
     '>
   ]
 } 'info' STORE
