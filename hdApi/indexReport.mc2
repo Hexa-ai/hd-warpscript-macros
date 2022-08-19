@@ -1,0 +1,48 @@
+{
+  'name' 'indexReport'
+  'desc' 
+  <'
+  This macro index the reports from Hexa-data API
+  '>
+  'sig' [ [ [ 'perPage:STRING' ] [ 'page:STRING' ] [ 'searchKey:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'searchKey' 'Report name search filter'
+    'page' 'Page to display (set to 1 if params is empty string)'
+    'perPage' 'Report per page to display (set to 10 if params is empty string)'
+  }
+  'examples' [
+    <'
+      '3' '' '.txt' @hdApi/indexReport
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+
+  'searchKey' STORE
+  'page' STORE
+  'perPage' STORE
+
+  <% $perPage '' == %>
+  <% '10' 'perPage' STORE %>
+  IFT
+
+  <% $page '' == %>
+  <% '1' 'page' STORE %>
+  IFT
+ 
+  $hdApiUrl '/projects/' + $writeToken +  '/wsReport/' +  '?searchKey='  + $searchKey + '&perPage=' + $perPage + '&page=' + $page + 'url' STORE
+  
+  { 'url' $url 'method' 'GET' 'headers' {} } HTTP  'response' STORE
+
+  $response
+
+  <% $response 'status.code' GET 200 == %>
+  <% $response 'content' GET 'utf-8' BYTES-> JSON-> %>
+  <% 'hdIndexReport error http request' MSGFAIL %>
+  IFTE
+
+  $context RESTORE
+  
+%>

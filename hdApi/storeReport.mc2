@@ -1,0 +1,54 @@
+{
+  'name' 'storeReport'
+  'desc' 
+  <'
+  This macro store report to Hexa-data API
+  '>
+  'sig' [ [ [ 'fileName:STRING' ] [ 'data:<LIST>LIST | STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'data' 'Data to write (LIST of LIST for CSV file type and STRING for other'
+    'fileName' 'Filename with the extension'
+    }
+  'examples' [
+    <'
+      'Hello World' 'textFile.txt' @hdApi/storeReport
+    '>
+
+    <'
+      [ ['Names' 'Values' ] ['value1' 12 ] ] 'textFile.txt' @hdApi/storeReport
+    '>
+  ]
+} 'info' STORE
+
+<%
+  SAVE 'context' STORE
+  
+  'fileName' STORE
+  'data' STORE
+
+  <% $fileName '' == $data '' == OR %>
+  <% 'storeReport parameter empty' MSGFAIL %>
+  IFT
+
+  <% $data TYPEOF 'LIST' != $data TYPEOF 'STRING' != AND  %>
+  <% 'storeReport must be a string or list of list' MSGFAIL %>
+  IFT
+
+  <% $data TYPEOF 'LIST' ==  $fileName '.' SPLIT -1 GET TOLOWER 'csv' != AND %>
+  <% 'storeReport if data is list of list then fileName extension must be csv' MSGFAIL %>
+  IFT
+
+
+
+  $hdApiUrl '/projects/' + $writeToken +  '/wsReport/' + $fileName +  'url' STORE
+  
+  { 'url' $url 'method' 'POST' 'headers' {} 'body' $data ->JSON } HTTP 'response' STORE
+
+  <% $response 'status.code' GET 200 == %>
+  <% true %>
+  <% 'storeReport error http request: ' $response 'utf-8' BYTES-> MSGFAIL %>
+  IFTE
+
+  $context RESTORE
+%>

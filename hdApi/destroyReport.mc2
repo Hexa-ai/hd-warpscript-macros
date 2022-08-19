@@ -1,0 +1,33 @@
+{
+  'name' 'destroyReport'
+  'desc' 
+  <'
+  This macro destroy report to Hexa-data API
+  '>
+  'sig' [ [ [ 'id:LONG' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'id' 'File id to destroy'
+    }
+  'examples' [
+    <'
+      39 @hdApi/destroyReport
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+
+  'id' STORE
+
+  $hdApiUrl '/projects/' + $writeToken +  '/wsReport/' +  $id TOSTRING + 'url' STORE
+  
+  { 'url' $url 'method' 'DELETE' 'headers' {} } HTTP  'response' STORE
+
+  <% $response 'status.code' GET 200 == %>
+  <% true %>
+  <% 'destroyReport error http request' $response 'utf-8' BYTES-> MSGFAIL %>
+  IFTE
+
+  $context RESTORE
+%>
