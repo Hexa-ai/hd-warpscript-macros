@@ -27,7 +27,7 @@
 
   <% $response 'status.code' GET 200 == %>
   <% true %>
-  <% 'deviceMsgDown error http request' $response 'utf-8' BYTES-> MSGFAIL %>
+  <% 'deviceMsgDown error http request' $response MSGFAIL %>
   IFTE
 
   $context RESTORE
