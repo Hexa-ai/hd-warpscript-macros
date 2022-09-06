@@ -21,7 +21,7 @@
 
   'namespace' STORE
   'payload' STORE
-  $hdApiUrl '/projects/' + $writeToken +  '/device/' +  $namespace + 'msgDown' + 'url' STORE
+  $hdApiUrl '/projects/' + $writeToken +  '/device/' +  $namespace + '/msgDown' + 'url' STORE
   
   { 'url' $url 'method' 'POST' 'headers' {} 'body' $payload } HTTP  'response' STORE
 
