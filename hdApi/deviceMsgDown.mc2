@@ -31,4 +31,4 @@
   IFTE
 
   $context RESTORE
-%> 'deviceMsgDown' STORE
+%>
