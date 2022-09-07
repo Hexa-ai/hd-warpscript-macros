@@ -4,7 +4,7 @@
   <'
   This macro store report to Hexa-data API
   '>
-  'sig' [ [ [ 'fileName:STRING' ] [ 'data:<LIST>LIST | STRING' ] ] ] // Signature
+  'sig' [ [ [ 'data:<LIST>LIST | STRING' ] [ 'fileName:STRING' ] ] ] // Signature
   'params' {
     // Signature params description
     'data' 'Data to write (LIST of LIST for CSV file type and STRING for other'
