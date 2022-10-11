@@ -1,0 +1,56 @@
+{
+  'name' 'getEcowatt'
+  'desc' 
+  <'
+  Used to retrieve EcoWatt signal information provided by RTE
+  '>
+  'sig' [ [ [ 'base64Code:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'base64Code' 'API key provided by RTE (clientId:secretId in base64)'
+  }
+  'examples' [
+    <'
+      'your base64 RTE API code' @utils/getEcowatt
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'base64Code' STORE
+
+  <%
+    SAVE 'context' STORE
+    'base64Code' STORE
+    
+    { 
+      'url' 'https://digital.iservices.rte-france.com/token/oauth/'
+      'method' 'POST'
+      'headers' {
+        'Authorization'  'Basic ' $base64Code +
+        'Content-Type' 'application/x-www-form-urlencoded'
+      }
+    } HTTP 'content' GET 'utf-8' BYTES-> JSON-> 'access_token' GET
+
+    $context RESTORE
+  %> 'getToken' STORE
+
+  $base64Code @getToken 'accessToken' STORE
+
+
+  { 
+    'url' 'https://digital.iservices.rte-france.com/open_api/ecowatt/v4/signals'
+    'method' 'GET'
+    'headers' {
+      'Authorization'  'Bearer ' $accessToken +
+      'Content-Type' 'application/x-www-form-urlencoded'
+    }
+  } HTTP 'result' STORE
+  
+  <% $result 'status.code' GET 200 != %>
+  <% 'Ecowatt API result error code: ' $result 'status.code' GET TOSTRING + %>
+  <% $result 'content' GET 'utf-8' BYTES-> JSON-> %>
+  IFTE
+
+  $context RESTORE
+%>
