@@ -1,0 +1,34 @@
+{
+  'name' 'readVar'
+  'desc' 
+  <'
+    Used to read mono value GTS (on the 0 timestamp)
+    The gts is found by its classname
+  '>
+  'sig' [ [ [ 'classname:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'classname' 'classname of the mono GTS record sought'
+  }
+  'examples' [
+    <'
+      'edgeDemo.testVariable' @utils/readVar
+    '>
+  ]
+} 'info' STORE
+
+<%
+  SAVE 'context' STORE
+
+  'varName' STORE
+
+  { 
+    'token' $readToken 
+    'class' $varName
+    'labels' {}
+    'start' 0
+    'end' 1
+  } FETCH 0 GET VALUES 0 GET
+
+  $context RESTORE
+%>
