@@ -1,0 +1,47 @@
+{
+  'name' 'sendSms'
+  'desc' 
+  <'
+  This macro send SMS message to receivers
+  '>
+  'sig' [ [ [ 'message:STRING' ] [ 'receivers:<LIST>STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'message' 'Text message to send'
+    'receivers' 'receivers list (phone numbers)'
+    }
+  'examples' [
+    <'
+      'Hello World' [ '06XXXXXXXX' '07XXXXXXXX' ] @hdApi/sendSms
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'receivers' STORE
+  'message' STORE
+
+  <% $receivers SIZE 0 == $message '' == OR %>
+  <% 'sendSms parameter empty' MSGFAIL %>
+  IFT
+
+  {
+    'receivers' $receivers
+    'message' $message
+  } 'body' STORE
+
+
+
+  $hdApiUrl '/notify/' + $writeToken +  '/sms' +  'url' STORE
+
+  { 'url' $url 'method' 'POST' 'headers' { 'Content-Type' 'application/json' } 'body' $body ->JSON } HTTP 'response' STORE
+
+  <% $response 'status.code' GET 200 == %>
+  <% true %>
+  <% 'storeReport error http request: ' $response 'utf-8' BYTES-> MSGFAIL %>
+  IFTE
+
+  $context RESTORE
+
+  %> 
+  
