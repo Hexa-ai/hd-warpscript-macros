@@ -38,7 +38,7 @@
 
   <% $response 'status.code' GET 200 == %>
   <% true %>
-  <% 'storeReport error http request: ' $response 'utf-8' BYTES-> MSGFAIL %>
+  <% 'sendSms error http request: ' $response 'utf-8' BYTES-> MSGFAIL %>
   IFTE
 
   $context RESTORE
