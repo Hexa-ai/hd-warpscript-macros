@@ -49,7 +49,7 @@
 
   <% $response 'status.code' GET 200 == %>
   <% true %>
-  <%  'storeReport error http request: ' $response ->JSON MSGFAIL %>
+  <%  'sendMail error http request: ' $response ->JSON MSGFAIL %>
   IFTE
 
   $context RESTORE
