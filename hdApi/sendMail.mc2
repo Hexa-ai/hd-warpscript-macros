@@ -1,0 +1,57 @@
+{
+  'name' 'sendMail'
+  'desc' 
+  <'
+  This macro send Mail message to receivers
+  '>
+  'sig' [ [ [ 'message:STRING' ] [ 'subject:STRING' ] [ 'attachmentId:STRING|NULL' ] [ 'attachmentId:LONG|NULL' ] [ 'receivers:<LIST>STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'message' 'Text message to send'
+    'subject' 'Email subject'
+    'attachmentId' 'Attachment ID (Report ID), set to NULL if no attachment needed'
+    'attachmentName' 'Name to give to the attachment'
+    'receivers' 'receivers list (email adresses)'
+    }
+  'examples' [
+    <'
+      'Attention 1 alarme active' 'Alarme' 1 'pièceJointe.txt' 'contact@xxx.com' @hdApi/sendEmail
+
+      'Attention 1 alarme active' 'Alarme (sans pièce jointe)' NULL '' 'contact@xxx.com' @hdApi/sendEmail
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'receivers' STORE
+  'attachmentName' STORE
+  'attachmentId' STORE
+  'subject' STORE
+  'message' STORE
+
+  <% $receivers SIZE 0 == $message '' == OR $subject '' == OR %>
+  <% 'sendMail parameter empty' MSGFAIL %>
+  IFT
+
+  {
+    'receivers' $receivers
+    'attachmentName' $attachmentName
+    'attachmentId' $attachmentId
+    'subject' $subject
+    'message' $message
+  } 'body' STORE
+
+
+
+  $hdApiUrl '/notify/' + $writeToken +  '/mail' +  'url' STORE
+
+  { 'url' $url 'method' 'POST' 'headers' { 'Content-Type' 'application/json' } 'body' $body ->JSON } HTTP 'response' STORE
+
+  <% $response 'status.code' GET 200 == %>
+  <% true %>
+  <%  'storeReport error http request: ' $response ->JSON MSGFAIL %>
+  IFTE
+
+  $context RESTORE
+
+  %>
