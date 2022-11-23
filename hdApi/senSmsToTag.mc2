@@ -1,0 +1,46 @@
+{
+  'name' 'sendSmsToTag'
+  'desc' 
+  <'
+  This macro send SMS message to hexa-data tagged receivers
+  '>
+  'sig' [ [ [ 'message:STRING' ] [ 'tag:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'message' 'Text message to send'
+    'tag' 'app receivers tag'
+    }
+  'examples' [
+    <'
+      'Attention 1 alarme active' 'maintenance' @hdApi/sendSmsToTag
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'tag' STORE
+  'message' STORE
+
+  <% $tag '' == $message '' == OR %>
+  <% 'sendSms parameter empty' MSGFAIL %>
+  IFT
+
+  {
+    'tag' $tag
+    'message' $message
+  } 'body' STORE
+
+
+
+  $hdApiUrl '/notify/' + $writeToken +  '/sms/tag' +  'url' STORE
+
+  { 'url' $url 'method' 'POST' 'headers' { 'Content-Type' 'application/json' } 'body' $body ->JSON } HTTP 'response' STORE
+
+  <% $response 'status.code' GET 200 == %>
+  <% true %>
+  <% 'storeReport error http request: ' $response 'utf-8' BYTES-> MSGFAIL %>
+  IFTE
+
+  $context RESTORE
+
+  %> 
