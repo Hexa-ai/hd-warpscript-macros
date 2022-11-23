@@ -1,0 +1,57 @@
+{
+  'name' 'sendMailToTag'
+  'desc' 
+  <'
+  This macro send Mail message to hexa-data tagged receivers
+  '>
+  'sig' [ [ [ 'message:STRING' ] [ 'subject:STRING' ] [ 'attachmentId:STRING|NULL' ] [ 'attachmentId:LONG|NULL' ] [ 'tag:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'message' 'Text message to send'
+    'subject' 'Email subject'
+    'attachmentId' 'Attachment ID (Report ID), set to NULL if no attachment needed'
+    'attachmentName' 'Name to give to the attachment'
+    'tag' 'app receivers tag'
+    }
+  'examples' [
+    <'
+      'Attention 1 alarme active' 'Alarme' 1 'pièceJointe.txt' 'maintenance' @hdApi/sendEmailToTag
+
+      'Attention 1 alarme active' 'Alarme (sans pièce jointe)' NULL '' 'maintenance' @hdApi/sendEmailToTag
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'tag' STORE
+  'attachmentName' STORE
+  'attachmentId' STORE
+  'subject' STORE
+  'message' STORE
+
+  <% $tag '' == $message '' == OR $subject '' == OR %>
+  <% 'sendMailToTag parameter empty' MSGFAIL %>
+  IFT
+
+  {
+    'tag' $tag
+    'attachmentName' $attachmentName
+    'attachmentId' $attachmentId
+    'subject' $subject
+    'message' $message
+  } 'body' STORE
+
+
+
+  $hdApiUrl '/notify/' + $writeToken +  '/mail/tag' +  'url' STORE
+
+  { 'url' $url 'method' 'POST' 'headers' { 'Content-Type' 'application/json' } 'body' $body ->JSON } HTTP 'response' STORE
+
+  <% $response 'status.code' GET 200 == %>
+  <% true %>
+  <%  'sendMailToTag error http request: ' $response ->JSON MSGFAIL %>
+  IFTE
+
+  $context RESTORE
+
+  %>
