@@ -15,9 +15,9 @@
     }
   'examples' [
     <'
-      'Attention 1 alarme active' 'Alarme' 1 'pièceJointe.txt' 'maintenance' @hdApi/sendEmailToTag
+      'Attention 1 alarme active' 'Alarme' 1 'pièceJointe.txt' 'maintenance' @hdApi/sendMailToTag
 
-      'Attention 1 alarme active' 'Alarme (sans pièce jointe)' NULL '' 'maintenance' @hdApi/sendEmailToTag
+      'Attention 1 alarme active' 'Alarme (sans pièce jointe)' NULL NULL 'maintenance' @hdApi/sendMailToTag
     '>
   ]
 } 'info' STORE
