@@ -15,7 +15,7 @@
   }
   'examples' [
     <'
-      'testRaport' [ 'local._.batiementA.TGBT.compteur1.energie' ] 1 m NOW 1 d - NOW @hdApi/@csvExportReport'
+      'testRaport' [ 'local._.batiementA.TGBT.compteur1.energie' ] 1 m NOW 1 d - NOW @hdApi/csvExportReport'
     '>
   ]
 } 'info' STORE
