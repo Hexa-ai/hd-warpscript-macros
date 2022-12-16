@@ -1,0 +1,123 @@
+{
+  'name' 'csvExportReport'
+  'desc' 
+  <'
+  This macro allows you to extract data and generate a CSV report (max 500,000 points)
+  '>
+  'sig' [ [ [ 'reportName:STRING' ] [ 'varSelection:LIST<STRING>' ] [ 'timeSpan:LONG' ] [ 'dtStart:LONG' ] [ 'dtEnd:LONG' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'dtEnd' 'The end timestamp for extraction'
+    'dtStart' 'The start timestamp for extraction'
+    'timeSpan' 'The time span for extraction buckets (BUCKETIZER) '
+    'varSelection' 'List of classname to extract'
+    'reportName' 'The name of the generated repport without extension'
+  }
+  'examples' [
+    <'
+      'testRaport' [ 'local._.batiementA.TGBT.compteur1.energie' ] 1 m NOW 1 d - NOW @hdApi/@csvExportReport'
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'dtEnd' STORE
+  'dtStart' STORE
+  'timeSpan' STORE
+  'varSelection' STORE
+  'reportName' STORE
+
+  1000000 MAXBUCKETS
+  100000000 LIMIT
+  500000 'MAX_CSV_POINTS' STORE
+   
+  $dtEnd $dtStart - $timeSpan / $varSelection SIZE * 'dataNumber' STORE
+  $dtEnd $dtStart - $timeSpan / 'rowNumber' STORE
+  $varSelection SIZE 'colNumber' STORE
+  
+  $varSelection '.*' 0 INDEXOF [] != 'wilcardSelect' STORE
+ 
+  <% $dataNumber $MAX_CSV_POINTS <= $colNumber 0 != AND $wilcardSelect NOT AND %>
+  <% 
+    /**
+     * classname REGEX 
+     * 
+     */
+    '~' 'classnames' STORE
+    $varSelection
+    <% 
+      'element' STORE
+      $classnames $element + '|' + 'classnames' STORE
+    %> FOREACH
+
+    <% $varSelection SIZE 0 == %>
+    <% '' 'classnames' STORE %>
+    IFT
+
+    { 
+      'token' $readToken 
+      'class' $classnames 
+      'labels' {} 
+      'start' $dtStart
+      'end' $dtEnd
+    } FETCH 'data' STORE
+
+    /**
+     * 
+     * Bucketize + Fill
+     * 
+     */
+    $data LASTTICK  "lastBucket" STORE
+    $timeSpan "bucketSpan" STORE // 1 minute
+    $data FIRSTTICK "start" STORE // count = ((end - start) / bucketspan) + 1
+    $lastBucket $start - $bucketSpan / TOLONG 1 + "bucketCount" STORE
+    [ $data bucketizer.last $lastBucket $bucketSpan $bucketCount ] BUCKETIZE FILLNEXT FILLPREVIOUS UNBUCKETIZE //'bucketizedModelGts' STORE
+
+    /**
+     * 
+     * Format array
+     * 
+     */
+    '' 'data' STORE
+    //sort list of GTS by name
+    <% NAME %> SORTBY "gtsList" STORE
+    [] "finalCsvMatrix" STORE // the output
+    // build the the first line and append it to the result
+    [ "time"  $gtsList <% DROP NAME %> LMAP ] 
+    FLATTEN "headers" STORE
+    $finalCsvMatrix $headers +! DROP 
+
+    [ $gtsList 0 GET TICKLIST
+      <% DROP ISO8601 %> LMAP // need to convert us timestamps into something excel can understand
+    ]   //take timestamps of the first gts
+    $gtsList <% DROP VALUES %> LMAP APPEND  
+    ZIP //convert columns to lines
+    'gtsList' STORE
+
+    $finalCsvMatrix $gtsList APPEND 'gtsList' STORE
+
+
+    $gtsList SIZE 'rowNumber' STORE
+    $gtsList 0 GET SIZE 'colNumber' STORE
+    /**
+     * 
+     * Generate CSV with Hexa-data
+     * 
+     */
+    $gtsList $reportName '.csv' + @hdApi/storeReport 'result' STORE
+
+    <% $result true == %>
+    <% { 'error' NULL 'colNumber' $colNumber 'rowNumber' $rowNumber } %>
+    <% { 'error' '@hdApi/storeReport exec error' 'colNumber' $colNumber 'rowNumber' $rowNumber } %>
+    IFTE
+  %>
+  <%
+    <% $dataNumber $MAX_CSV_POINTS > %>
+    <% { 'error' 'max csv points reached' 'colNumber' $colNumber 'rowNumber' $rowNumber } %>
+    <% { 'error' 'no classnames selected and .* forbidden' 'colNumber' $colNumber 'rowNumber' $rowNumber } %>
+    IFTE
+    
+  %>
+  IFTE
+  $context RESTORE
+%>
