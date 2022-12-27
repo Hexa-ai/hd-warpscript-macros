@@ -15,9 +15,9 @@
     }
   'examples' [
     <'
-      'Attention 1 alarme active' 'Alarme' 1 'pièceJointe.txt' 'contact@xxx.com' @hdApi/sendMail
+      'Attention 1 alarme active' 'Alarme' 1 'pièceJointe.txt' [ 'contact@xxx.com' ] @hdApi/sendMail
 
-      'Attention 1 alarme active' 'Alarme (sans pièce jointe)' NULL NULL 'contact@xxx.com' @hdApi/sendMail
+      'Attention 1 alarme active' 'Alarme (sans pièce jointe)' NULL NULL [ 'contact@xxx.com' ] @hdApi/sendMail
     '>
   ]
 } 'info' STORE
