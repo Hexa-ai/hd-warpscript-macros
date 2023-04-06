@@ -4,16 +4,20 @@
   <'
   This macro index the reports from Hexa-data API
   '>
-  'sig' [ [ [ 'perPage:STRING' ] [ 'page:STRING' ] [ 'searchKey:STRING' ] ] ] // Signature
+  'sig' [ [ [ 'type:STRING' ] [ 'perPage:STRING' ] [ 'page:STRING' ] [ 'searchKey:STRING' ] ] ] // Signature
   'params' {
     // Signature params description
     'searchKey' 'Report name search filter'
     'page' 'Page to display (set to 1 if params is empty string)'
     'perPage' 'Report per page to display (set to 10 if params is empty string)'
+    'type' 'Type of document (report or document)'
   }
   'examples' [
     <'
-      '3' '' '.txt' @hdApi/indexReport
+      'report' '3' '' '.txt' @hdApi/indexReport
+    '>
+    <'
+      'document' '' '' '' @hdApi/indexReport
     '>
   ]
 } 'info' STORE
@@ -23,6 +27,17 @@
   'searchKey' STORE
   'page' STORE
   'perPage' STORE
+  'type' STORE
+
+  <% $type 'document' != $type 'report' != AND %>
+  <% '1' 'type' STORE %>
+  IFT
+  <% $type 'document' == %>
+  <% '0' 'type' STORE %>
+  IFT
+  <% $type 'report' == %>
+  <% '1' 'type' STORE %>
+  IFT
 
   <% $perPage '' == %>
   <% '10' 'perPage' STORE %>
@@ -32,11 +47,11 @@
   <% '1' 'page' STORE %>
   IFT
  
-  $hdApiUrl '/projects/' + $writeToken +  '/wsReport/' +  '?searchKey='  + $searchKey + '&perPage=' + $perPage + '&page=' + $page + 'url' STORE
+  $hdApiUrl '/projects/' + $writeToken +  '/wsReport/' +  '?searchKey='  + $searchKey + '&perPage=' + $perPage + '&page=' + $page + '&type=' + $type + 'url' STORE
   
   { 'url' $url 'method' 'GET' 'headers' {} } HTTP  'response' STORE
 
-  $response
+  //$response
 
   <% $response 'status.code' GET 200 == %>
   <% $response 'content' GET 'utf-8' BYTES-> JSON-> %>
