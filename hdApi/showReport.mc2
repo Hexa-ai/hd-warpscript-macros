@@ -1,0 +1,37 @@
+{
+  'name' 'showReport'
+  'desc' 
+  <'
+  This macro get reports or document content from Hexa-data API
+  '>
+  'sig' [ [ [ 'url:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'url' 'Report or document url'
+  }
+  'examples' [
+    <'
+      '/uploads/projectsDocuments/clg5itew90000tsul4w9633lp.csv?signature=eyJtZXN...kjjkjk' @hdApi/showReport
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+
+  'url' STORE
+
+ 
+  $hdUrl $url + 'url' STORE
+  
+  { 'url' $url 'method' 'GET' 'headers' {} } HTTP  'response' STORE
+
+  
+
+  <% $response 'status.code' GET 200 == %>
+  <% $response 'content' GET 'utf-8' BYTES-> %>
+  <% 'hdShowReport error http request' MSGFAIL %>
+  IFTE
+
+  $context RESTORE
+  
+%>
