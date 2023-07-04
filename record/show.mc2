@@ -1,0 +1,48 @@
+{
+  'name' 'show'
+  'desc' 
+  <'
+  This macro displays a record from the "@record/index" macro results. This record must be chosen by the value of one of these fields.
+  '>
+  'sig' [ [ [ 'records:MAP[]' ] [ 'fiedName:STRING' ] [ 'fieldValue:ANY' ] ] ] // Signature
+  'params' {
+    // Signature params description
+    'fieldValue' 'Field value to find'
+    'fiedName' 'Field used to find the record'
+    'records' 'List of records from "@record/index"'
+  }
+  'examples' [
+    <'
+      {
+        'recordFieldName' 'edgeCpt_1.TLO.REY_001.record'
+        'fieldsNames' [ 'edgeCpt_1.TLO.REY_001.ConsoElec' 'edgeCpt_1.TLO.REY_001.ConsoElecKg' 'edgeCpt_1.TLO.REY_001.ConsoPropane' ]
+        'dtStart' NOW 1000 d -
+        'dtEnd' NOW
+      } @record/index 'indexResult' STORE
+
+      $indexResult 'recordName' 'Charge test dev 1' @record/show
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'fieldValue' STORE
+  'fiedName' STORE
+  'records' STORE
+
+
+  $records <%
+    'i' STORE
+    'record' STORE
+    
+    <% $record $fiedName GET $fieldValue == %>
+    <% $record 'result' STORE  RETURN %>
+    <% {} 'result' STORE  RETURN %>
+    IFTE
+    NULL
+  %> LMAP DROP
+
+  $result
+
+  $context RESTORE
+%> 
