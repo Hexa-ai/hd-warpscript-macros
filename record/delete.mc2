@@ -1,0 +1,71 @@
+{
+  'name' 'delete'
+  'desc' 
+  <'
+  This macro delete a record based on multiple GTSs with aligned timestamps.
+  This macro deletes the desired record on the variable / GTS describing a record but also on the variables / GTS of fields
+  '>
+  'sig' [ [ [ 'parameters:MAP' ]  ] ] // Signature
+  'params' {
+    // Signature params MAP description
+    'recordName' 'Value of the recordName field of the record to delete'
+    'recordFieldName' 'GTS name/ variable describing the record in the result the record name is assigned to the recordName attribute'
+    'fieldsNames' 'name of the GTS / variable used as additional fields for the record'
+    'dtStart' 'Start timestamp'
+    'dtEnd' 'End timestamp'
+  }
+  'examples' [
+    <'
+      {
+        'recordFieldName' 'edgeCpt_1.TLO.REY_001.record'
+        'fieldsNames' [ 'edgeCpt_1.TLO.REY_001.ConsoElec' 'edgeCpt_1.TLO.REY_001.ConsoElecKg' 'edgeCpt_1.TLO.REY_001.ConsoPropane' ]
+        'dtStart' NOW 1000 d -
+        'dtEnd' NOW
+      } @record/index
+
+      {
+        'recordFieldName' 'edgeCpt_1.TLO.REY_001.record'
+        'fieldsNames' [ 'edgeCpt_1.TLO.REY_001.ConsoElec' 'edgeCpt_1.TLO.REY_001.ConsoElecKg' 'edgeCpt_1.TLO.REY_001.ConsoPropane' ]
+        'dtStart' NOW 1000 d -
+        'dtEnd' NOW
+        'recordName' 'Charge test dev 1'
+      } @delete 
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'conf' STORE
+  $conf 'dtEnd' GET 'dtEnd' STORE
+  $conf 'dtStart' GET 'dtStart' STORE
+  $conf 'fieldsNames' GET 'fieldsNames' STORE
+  $conf 'recordFieldName' GET 'recordFieldName' STORE
+  $conf 'recordName' GET 'recordName' STORE
+
+  '~' $recordFieldName + 'gtsSelector' STORE
+
+  $fieldsNames
+  <%
+    'fieldName' STORE
+    $gtsSelector '|' + $fieldName + 'gtsSelector' STORE
+  %>
+  FOREACH
+
+  $gtsSelector '{}' + 'gtsSelector' STORE
+
+  {
+    'recordFieldName' $recordFieldName
+    'fieldsNames' $fieldsNames
+    'dtStart' $dtStart
+    'dtEnd' $dtEnd
+  } @project/Records.Index 
+
+
+  'recordName' $recordName @project/Records.Show 'record' STORE
+
+
+  $writeToken $gtsSelector $record 'dtStart' GET $record 'dtEnd' GET $fieldsNames SIZE 1 + DELETE
+  
+
+  $context RESTORE
+%>
