@@ -30,6 +30,7 @@
   'fiedName' STORE
   'records' STORE
 
+  {} 'result' STORE
 
   $records <%
     'i' STORE
