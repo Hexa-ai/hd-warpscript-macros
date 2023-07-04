@@ -9,7 +9,7 @@
   'sig' [ [ [ 'parameters:MAP' ]  ] ] // Signature
   'params' {
     // Signature params MAP description
-    'recordFieldName' 'GTS name/ variable describing the record'
+    'recordFieldName' 'GTS name/ variable describing the record in the result the record name is assigned to the recordName attribute'
     'fieldsNames' 'name of the GTS / variable used as additional fields for the record'
     'dtStart' 'Start timestamp'
     'dtEnd' 'End timestamp'
