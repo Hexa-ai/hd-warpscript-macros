@@ -1,0 +1,96 @@
+{
+  'name' 'update'
+  'desc' 
+  <'
+  This macro update or create a record based on multiple GTSs with aligned timestamps.
+  This macro updates the indicated record or creates a new one if it does not exist
+  '>
+  'sig' [ [ [ 'parameters:MAP' ]  ] ] // Signature
+  'params' {
+    // Signature params MAP description
+    'recordValues' 'Value of the record and its fields to update'
+    'recordName' 'Value of the recordName field of the record to update'
+    'recordFieldName' 'GTS name/ variable describing the record in the result the record name is assigned to the recordName attribute'
+    'fieldsNames' 'name of the GTS / variable used as additional fields for the record'
+    'dtStart' 'Start timestamp'
+    'dtEnd' 'End timestamp'
+  }
+  'examples' [
+    <'
+      {
+        'recordFieldName' 'edgeCpt_1.TLO.REY_001.record'
+        'fieldsNames' [ 'edgeCpt_1.TLO.REY_001.ConsoElec' 'edgeCpt_1.TLO.REY_001.ConsoElecKg' 'edgeCpt_1.TLO.REY_001.ConsoPropane' ]
+        'dtStart' NOW 1000 d -
+        'dtEnd' NOW
+      } @record/index
+
+      {
+        'recordFieldName' @project/Records.Conf 'basePath' GET  'REY_001' + '.Charges' +
+        'fieldsNames' [ 'edgeCpt_1.TLO.REY_001.ConsoElec' 'edgeCpt_1.TLO.REY_001.ConsoElecKg' 'edgeCpt_1.TLO.REY_001.ConsoPropane' ]
+        'dtStart' NOW 1000 d -
+        'dtEnd' NOW
+        'recordName' 'Charge test dev 1'
+        'recordValues' { 'recordName' 'Tutu salut' 'dtStart' 1688137446293355 'dtEnd' 1688139246293351 'ConsoElecKg' 300 'ConsoElec' 12 'ConsoPropane' 345 }
+      } @record/update 
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'conf' STORE
+  $conf 'dtEnd' GET 'dtEnd' STORE
+  $conf 'dtStart' GET 'dtStart' STORE
+  $conf 'fieldsNames' GET 'fieldsNames' STORE
+  $conf 'recordFieldName' GET 'recordFieldName' STORE
+  $conf 'recordName' GET 'recordName' STORE
+  $conf 'recordValues' GET 'recordValues' STORE
+
+  '~' $recordFieldName + 'class' STORE
+
+  $fieldsNames
+  <%
+    'fieldName' STORE
+    $class '|' + $fieldName + 'class' STORE
+  %>
+  FOREACH
+
+  {
+    'token'  $readToken
+    'class'  $class
+    'labels' {}
+  } FIND 'gtsList' STORE
+
+
+  $gtsList
+  <% 
+    'i' STORE
+    'gts' STORE
+
+    $gts NAME '.' SPLIT 'splittedGtsName' STORE
+    $splittedGtsName $splittedGtsName SIZE 1 - GET 'attributeName' STORE
+    
+    
+      <% $gts NAME  $recordFieldName == %>
+      <% 
+     
+        '['  $recordValues 'dtStart' GET TOSTRING + ', ' + $recordValues 'dtEnd' GET TOSTRING + ', "' + $recordValues 'recordName' GET + '"]' + 'recordValue' STORE
+        $gts $gts NAME RENAME $recordValues 'dtStart' GET NaN NaN NaN  $recordValue ADDVALUE 'gts' STORE
+        
+      %>
+      <% 
+        <% $recordValues $attributeName GET NULL != %>
+        <%
+          $gts $gts NAME RENAME $recordValues 'dtStart' GET NaN NaN NaN $recordValues $attributeName GET ADDVALUE 'gts' STORE 
+        %> IFT
+      %>
+      IFTE
+
+      $gts
+
+  %> LMAP 'gtsList' STORE
+
+
+  $gtsList $writeToken UPDATE
+
+  $context RESTORE
+%>
