@@ -58,10 +58,10 @@
     'fieldsNames' $fieldsNames
     'dtStart' $dtStart
     'dtEnd' $dtEnd
-  } @project/Records.Index 
+  } @record/index 
 
 
-  'recordName' $recordName @project/Records.Show 'record' STORE
+  'recordName' $recordName @record/show 'record' STORE
 
 
   $writeToken $gtsSelector $record 'dtStart' GET $record 'dtEnd' GET $fieldsNames SIZE 1 + DELETE
