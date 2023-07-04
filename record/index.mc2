@@ -1,0 +1,124 @@
+{
+  'name' 'index'
+  'desc' 
+  <'
+  This macro lists records based on multiple GTSs with aligned timestamps.
+
+  The GTS / variable that describes a record must be of type string and contain a JSON array composed of, in order, the start of record timestamp, the end of record timestamp and a string describing the name of the record.
+  '>
+  'sig' [ [ [ 'parameters:MAP' ]  ] ] // Signature
+  'params' {
+    // Signature params MAP description
+    'recordFieldName' 'GTS name/ variable describing the record'
+    'fieldsNames' 'name of the GTS / variable used as additional fields for the record'
+    'dtStart' 'Start timestamp'
+    'dtEnd' 'End timestamp'
+  }
+  'examples' [
+    <'
+      {
+        'recordFieldName' 'edgeCpt_1.TLO.REY_001.record'
+        'fieldsNames' [ 'edgeCpt_1.TLO.REY_001.ConsoElec' 'edgeCpt_1.TLO.REY_001.ConsoElecKg' 'edgeCpt_1.TLO.REY_001.ConsoPropane' ]
+        'dtStart' NOW 1000 d -
+        'dtEnd' NOW
+      } @record/index
+    '>
+  ]
+} 'info' STORE
+<%
+  SAVE 'context' STORE
+  'conf' STORE
+  $conf 'dtEnd' GET 'dtEnd' STORE
+  $conf 'dtStart' GET 'dtStart' STORE
+  $conf 'fieldsNames' GET 'fieldsNames' STORE
+  $conf 'recordFieldName' GET 'recordFieldName' STORE
+  
+  '~' $recordFieldName + 'class' STORE
+
+  $fieldsNames
+  <%
+    'fieldName' STORE
+    $class '|' + $fieldName + 'class' STORE
+  %>
+  FOREACH
+
+  {
+    'token'  $readToken
+    'class'  $class
+    'labels' {}
+  } FIND 'findGtsList' STORE
+
+
+
+
+  {
+    'token'  $readToken
+    'class'  $class
+    'labels' {}
+    'end' $dtEnd
+    'start' $dtStart
+  } FETCH 'datas' STORE
+
+// Merge fetch and find results
+  $findGtsList
+  <% 
+    'i' STORE
+    'findGts' STORE
+
+
+    $datas <%
+      'j' STORE
+      'gts' STORE
+      
+      <% $findGts NAME  $gts NAME == %>
+      <% $gts 'findGts' STORE %>
+      IFT
+
+      $gts
+    %> LMAP DROP
+
+
+    $findGts
+
+  %> LMAP 'datas' STORE
+
+  [] 'result' STORE
+  // Format result array based on sync tick GTS
+  [ $datas [] <%
+    'elm' STORE
+    $elm 7 GET 'values' STORE
+    $elm 1 GET 'names' STORE
+    {} 'record' STORE
+
+    0 $names SIZE 1 -
+    <%
+      'i' STORE
+      $names $i GET '.' SPLIT 'splittedAttributeName' STORE
+      $splittedAttributeName $splittedAttributeName SIZE 1 - GET 'attributeName' STORE
+      
+      
+      <% $names $i GET  $recordFieldName == %>
+      <%
+        $values $i GET JSON-> 'attributeValue' STORE
+        $record $attributeValue 2 GET 'recordName' PUT 'record' STORE 
+        $record $attributeValue 0 GET 'dtStart' PUT 'record' STORE 
+        $record $attributeValue 1 GET 'dtEnd' PUT 'record' STORE  
+      %>
+      <%          
+        $values $i GET 'attributeValue' STORE
+        $record $attributeValue $attributeName PUT 'record' STORE 
+      %>
+      IFTE
+    %>
+    FOR
+
+    $result [ $record ] APPEND 'result' STORE
+
+    NOW NaN NaN NaN 0
+  %> MACROREDUCER ] REDUCE DROP
+
+  $result
+
+
+  $context RESTORE
+%>
