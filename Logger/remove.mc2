@@ -1,0 +1,54 @@
+{
+  'name' 'remove'
+  'desc' 
+  <'
+    Deletes logs older than the timestamp passed as a parameter.
+    The log class can be selected in order to delete only the logs of this class (info, warning, error).
+    If the class passed as parameter is an empty string then the logs of all classes are deleted.
+  '>
+  'sig' [ [ [ 'dtEnd:LONG' ] [ 'logClass:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+  }
+  'examples' [
+    <'
+      NOW 10 d - 'info' @Logger.remove
+    '>
+  ]
+} 'info' STORE
+
+<%
+  !$info INFO
+  SAVE 'context' STORE
+  'logClass' STORE
+  'dtEnd' STORE
+
+
+  <% $logClass 'info' == %>
+  <%
+    'info' 'logClass' STORE
+  %>
+  IFT
+
+  <% $logClass 'warning' == %>
+  <%
+   'warning' 'logClass' STORE 
+  %>
+  IFT
+
+  <% $logClass 'error' == %>
+  <%
+    'error' 'logClass' STORE
+  %>
+  IFT
+
+  <% $logClass '' == %>
+  <%
+    '~.*' 'logClass' STORE
+  %>
+  IFT
+
+  $writeToken  NEWGTS 'logs' RENAME { 'logClass' $logClass } RELABEL TOSELECTOR MINLONG $dtEnd 3 DELETE
+
+  $context RESTORE
+%>
