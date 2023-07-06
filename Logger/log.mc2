@@ -1,0 +1,46 @@
+{
+  'name' 'log'
+  'desc' 
+  <'
+ 
+  '>
+  'sig' [ [ [ 'message:STRING' ] [ 'logClass:STRING' ] ] ] // Signature
+  'params' {
+    // Signature params description
+  }
+  'examples' [
+    <'
+      'Reception d'un message MQTT de test' 'info' @Logger.log
+    '>
+  ]
+} 'info' STORE
+
+<%
+  !$info INFO
+  SAVE 'context' STORE
+  'logClass' STORE
+  'message' STORE
+
+
+  <% $logClass 'info' == %>
+  <%
+    NEWGTS 'logs' RENAME { 'logClass' 'info' } RELABEL NOW NaN NaN NaN $message TOSTRING ADDVALUE 'logGts' STORE
+  %>
+  IFT
+
+  <% $logClass 'warning' == %>
+  <%
+   NEWGTS 'logs' RENAME { 'logClass' 'warning' } RELABEL NOW NaN NaN NaN $message TOSTRING ADDVALUE 'logGts' STORE 
+  %>
+  IFT
+
+  <% $logClass 'error' == %>
+  <%
+    NEWGTS 'logs' RENAME { 'logClass' 'error' } RELABEL NOW NaN NaN NaN $message TOSTRING ADDVALUE 'logGts' STORE
+  %>
+  IFT
+
+  $logGts $writeToken UPDATE
+
+  $context RESTORE
+%>
